@@ -301,8 +301,8 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 **Bruno Ferreira Alves**
 - 🏢 **Empresa**: UniCondo
 - 📱 **WhatsApp**: [+55 (11) 98793-5241](https://wa.me/5511987935241)
-- 💼 **LinkedIn**: [Bruno Ferreira Alves](https://linkedin.com/in/bruno-ferreira-alves)
-- 🐙 **GitHub**: [@brunoferreira](https://github.com/brunoferreira)
+- 💼 **LinkedIn**: [Bruno Ferreira Alves]([https://linkedin.com/in/bruno-ferreira-alves](https://www.linkedin.com/in/brunoferreiraalves/))
+- 🐙 **GitHub**: [@unicondo](https://github.com/unicondo)
 
 ## 🤝 Contribuindo
 
