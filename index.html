@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Calculadora PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" type="image/png" href="icon-192x192.png">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+        }
+
+        .calculator-container {
+            position: relative;
+            width: 100%;
+            max-width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 350px;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark .calculator {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .display {
+            text-align: right;
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+            flex-grow: 1;
+        }
+
+        .expression {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+            min-height: 20px;
+            word-break: break-all;
+        }
+
+        body.dark .expression {
+            color: #aaa;
+        }
+
+        .result {
+            font-size: 32px;
+            font-weight: 300;
+            color: #333;
+            min-height: 40px;
+            word-break: break-all;
+        }
+
+        body.dark .result {
+            color: white;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            border-radius: 16px;
+            height: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body.dark .btn {
+            background: rgba(51, 65, 85, 0.6);
+            color: #cbd5e1;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn.operator {
+            background: #2563eb;
+            color: white;
+        }
+
+        body.dark .btn.operator {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn.function {
+            font-size: 16px;
+        }
+
+        body.dark .btn.function {
+            color: #2563eb;
+        }
+
+        .btn.equals {
+            grid-row: span 2;
+            height: 132px;
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn.zero {
+            grid-column: span 2;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+        }
+
+        .theme-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            touch-action: manipulation;
+        }
+
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .calculator-container {
+                padding: 5px;
+            }
+            
+            .calculator {
+                padding: 15px;
+                border-radius: 20px;
+                min-height: calc(100vh - 10px);
+            }
+            
+            .display {
+                min-height: 120px;
+                padding: 10px;
+            }
+            
+            .result {
+                font-size: 28px;
+            }
+            
+            .btn {
+                height: 55px;
+                font-size: 16px;
+                border-radius: 14px;
+            }
+            
+            .btn.equals {
+                height: 122px;
+            }
+            
+            .buttons {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .btn {
+                height: 50px;
+                font-size: 15px;
+            }
+            
+            .btn.equals {
+                height: 112px;
+            }
+            
+            .result {
+                font-size: 24px;
+            }
+        }
+
+        /* PWA standalone mode */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="theme-toggle">
+            <button class="theme-btn" id="themeBtn">🌙</button>
+        </div>
+        
+        <div class="calculator">
+            <div class="display">
+                <div class="expression" id="expression"></div>
+                <div class="result" id="result">0</div>
+            </div>
+            
+            <div class="buttons">
+                <!-- Linha 1: Funções científicas -->
+                <button class="btn function" onclick="handleInput('e')">e</button>
+                <button class="btn function" onclick="handleInput('μ')">μ</button>
+                <button class="btn function" onclick="handleInput('sin')">sin</button>
+                <button class="btn function" onclick="handleInput('deg')">deg</button>
+                
+                <!-- Linha 2: Limpar e operadores -->
+                <button class="btn" onclick="handleInput('AC')">AC</button>
+                <button class="btn" onclick="handleInput('CI')">CI</button>
+                <button class="btn operator" onclick="handleInput('/')">/</button>
+                <button class="btn operator" onclick="handleInput('*')">*</button>
+                
+                <!-- Linha 3: Números 7-9 e menos -->
+                <button class="btn" onclick="handleInput('7')">7</button>
+                <button class="btn" onclick="handleInput('8')">8</button>
+                <button class="btn" onclick="handleInput('9')">9</button>
+                <button class="btn operator" onclick="handleInput('-')">-</button>
+                
+                <!-- Linha 4: Números 4-6 e mais -->
+                <button class="btn" onclick="handleInput('4')">4</button>
+                <button class="btn" onclick="handleInput('5')">5</button>
+                <button class="btn" onclick="handleInput('6')">6</button>
+                <button class="btn operator" onclick="handleInput('+')">+</button>
+                
+                <!-- Linha 5: Números 1-3 e igual -->
+                <button class="btn" onclick="handleInput('1')">1</button>
+                <button class="btn" onclick="handleInput('2')">2</button>
+                <button class="btn" onclick="handleInput('3')">3</button>
+                <button class="btn equals" onclick="handleInput('=')">=</button>
+                
+                <!-- Linha 6: Zero e ponto -->
+                <button class="btn zero" onclick="handleInput('0')">0</button>
+                <button class="btn" onclick="handleInput('.')">.</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais da calculadora
+        let currentInput = "0";
+        let previousInput = "";
+        let operator = "";
+        let waitingForOperand = false;
+
+        // Elementos do DOM
+        const expressionElement = document.getElementById('expression');
+        const resultElement = document.getElementById('result');
+        const themeBtn = document.getElementById('themeBtn');
+
+        // Função principal para lidar com inputs
+        function handleInput(value) {
+            switch(value) {
+                case 'AC':
+                    clearAll();
+                    break;
+                case 'CI':
+                    clearInput();
+                    break;
+                case '=':
+                    calculate();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    handleOperator(value);
+                    break;
+                case '.':
+                    handleDecimal();
+                    break;
+                case 'sin':
+                    handleFunction('sin');
+                    break;
+                case 'deg':
+                    toggleAngleMode();
+                    break;
+                case 'e':
+                    handleConstant('e');
+                    break;
+                case 'μ':
+                    handleConstant('μ');
+                    break;
+                default:
+                    if (!isNaN(value)) {
+                        handleNumber(value);
+                    }
+            }
+            updateDisplay();
+        }
+
+        function handleNumber(num) {
+            if (waitingForOperand) {
+                currentInput = num;
+                waitingForOperand = false;
+            } else {
+                currentInput = currentInput === "0" ? num : currentInput + num;
+            }
+        }
+
+        function handleOperator(nextOperator) {
+            const inputValue = parseFloat(currentInput.replace(",", "."));
+
+            if (previousInput === "") {
+                previousInput = inputValue;
+            } else if (operator) {
+                const currentValue = previousInput || 0;
+                const newValue = performCalculation(currentValue, inputValue, operator);
+
+                currentInput = formatNumber(newValue);
+                previousInput = newValue;
+            }
+
+            waitingForOperand = true;
+            operator = nextOperator;
+        }
+
+        function handleDecimal() {
+            if (waitingForOperand) {
+                currentInput = "0,";
+                waitingForOperand = false;
+            } else if (currentInput.indexOf(",") === -1) {
+                currentInput += ",";
+            }
+        }
+
+        function handleFunction(func) {
+            const value = parseFloat(currentInput.replace(",", "."));
+            let result;
+
+            switch(func) {
+                case 'sin':
+                    const angle = value * Math.PI / 180; // sempre em graus para simplicidade
+                    result = Math.sin(angle);
+                    break;
+            }
+
+            currentInput = formatNumber(result);
+            previousInput = "";
+            operator = "";
+            waitingForOperand = true;
+        }
+
+        function handleConstant(constant) {
+            switch(constant) {
+                case 'e':
+                    currentInput = formatNumber(Math.E);
+                    break;
+                case 'μ':
+                    currentInput = "0,000001";
+                    break;
+            }
+            waitingForOperand = true;
+        }
+
+        function calculate() {
+            const inputValue = parseFloat(currentInput.replace(",", "."));
+
+            if (previousInput !== "" && operator) {
+                const newValue = performCalculation(previousInput, inputValue, operator);
+                currentInput = formatNumber(newValue);
+                previousInput = "";
+                operator = "";
+                waitingForOperand = true;
+            }
+        }
+
+        function performCalculation(firstValue, secondValue, operator) {
+            switch (operator) {
+                case '+':
+                    return firstValue + secondValue;
+                case '-':
+                    return firstValue - secondValue;
+                case '*':
+                    return firstValue * secondValue;
+                case '/':
+                    return secondValue !== 0 ? firstValue / secondValue : 0;
+                default:
+                    return secondValue;
+            }
+        }
+
+        function clearAll() {
+            currentInput = "0";
+            previousInput = "";
+            operator = "";
+            waitingForOperand = false;
+        }
+
+        function clearInput() {
+            currentInput = "0";
+            waitingForOperand = false;
+        }
+
+        function formatNumber(num) {
+            if (isNaN(num) || !isFinite(num)) return "Erro";
+            
+            // Formatar número com vírgulas decimais
+            return parseFloat(num.toFixed(10))
+                .toLocaleString('pt-BR', { maximumFractionDigits: 10 });
+        }
+
+        function buildExpression() {
+            let expression = "";
+            
+            if (previousInput !== "") {
+                expression += formatNumber(previousInput);
+            }
+            
+            if (operator) {
+                expression += operator;
+            }
+            
+            if (waitingForOperand && operator) {
+                // Não mostrar o input atual se estivermos esperando um operando
+            } else if (currentInput !== "0" || previousInput === "") {
+                expression += currentInput;
+            }
+            
+            return expression;
+        }
+
+        function updateDisplay() {
+            const expression = buildExpression();
+            expressionElement.textContent = expression;
+            resultElement.textContent = currentInput;
+        }
+
+        // Gerenciamento de tema
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            themeBtn.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Inicializar tema
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                themeBtn.textContent = '☀️';
+            } else {
+                themeBtn.textContent = '🌙';
+            }
+        }
+
+        // Event listeners
+        themeBtn.addEventListener('click', toggleTheme);
+
+        // Suporte a teclado
+        document.addEventListener('keydown', function(e) {
+            const key = e.key;
+            
+            if (key >= '0' && key <= '9') {
+                handleInput(key);
+            } else if (['+', '-', '*', '/'].includes(key)) {
+                handleInput(key);
+            } else if (key === 'Enter' || key === '=') {
+                handleInput('=');
+            } else if (key === 'Escape') {
+                handleInput('AC');
+            } else if (key === 'Backspace') {
+                handleInput('CI');
+            } else if (key === '.' || key === ',') {
+                handleInput('.');
+            }
+        });
+
+        // Prevenir zoom em duplo toque
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Inicializar
+        initTheme();
+        updateDisplay();
+
+        // Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('SW registrado com sucesso:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Falha no registro do SW:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

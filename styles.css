@@ -1,0 +1,225 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  /* Light theme - exatamente como na imagem */
+  --bg-gradient-light-start: #87cefa;
+  --bg-gradient-light-end: #4682b4;
+  --calculator-bg-light: rgba(255, 255, 255, 0.15);
+  --display-bg-light: transparent;
+  --display-text-light: #666;
+  --result-text-light: #333;
+  --btn-bg-light: rgba(255, 255, 255, 0.5);
+  --btn-text-light: #333;
+  --btn-function-bg-light: rgba(255, 255, 255, 0.5);
+  --btn-function-text-light: #333;
+  --btn-operator-bg-light: rgba(255, 255, 255, 0.5);
+  --btn-operator-text-light: #333;
+  --btn-equals-bg-light: #2563eb;
+  --btn-equals-text-light: white;
+
+  /* Dark theme - exatamente como na imagem */
+  --bg-gradient-dark-start: #1e3a8a;
+  --bg-gradient-dark-end: #0f172a;
+  --calculator-bg-dark: rgba(15, 23, 42, 0.8);
+  --display-bg-dark: transparent;
+  --display-text-dark: #aaa;
+  --result-text-dark: white;
+  --btn-bg-dark: rgba(51, 65, 85, 0.6);
+  --btn-text-dark: #cbd5e1;
+  --btn-function-bg-dark: rgba(51, 65, 85, 0.6);
+  --btn-function-text-dark: #2563eb;
+  --btn-operator-bg-dark: #2563eb;
+  --btn-operator-text-dark: white;
+  --btn-equals-bg-dark: #2563eb;
+  --btn-equals-text-dark: white;
+
+  /* Valores ativos (começando com tema claro) */
+  --bg-gradient-start: var(--bg-gradient-light-start);
+  --bg-gradient-end: var(--bg-gradient-light-end);
+  --calculator-bg: var(--calculator-bg-light);
+  --display-bg: var(--display-bg-light);
+  --display-text: var(--display-text-light);
+  --result-text: var(--result-text-light);
+  --btn-bg: var(--btn-bg-light);
+  --btn-text: var(--btn-text-light);
+  --btn-function-bg: var(--btn-function-bg-light);
+  --btn-function-text: var(--btn-function-text-light);
+  --btn-operator-bg: var(--btn-operator-bg-light);
+  --btn-operator-text: var(--btn-operator-text-light);
+  --btn-equals-bg: var(--btn-equals-bg-light);
+  --btn-equals-text: var(--btn-equals-text-light);
+}
+
+body.dark-theme {
+  --bg-gradient-start: var(--bg-gradient-dark-start);
+  --bg-gradient-end: var(--bg-gradient-dark-end);
+  --calculator-bg: var(--calculator-bg-dark);
+  --display-bg: var(--display-bg-dark);
+  --display-text: var(--display-text-dark);
+  --result-text: var(--result-text-dark);
+  --btn-bg: var(--btn-bg-dark);
+  --btn-text: var(--btn-text-dark);
+  --btn-function-bg: var(--btn-function-bg-dark);
+  --btn-function-text: var(--btn-function-text-dark);
+  --btn-operator-bg: var(--btn-operator-bg-dark);
+  --btn-operator-text: var(--btn-operator-text-dark);
+  --btn-equals-bg: var(--btn-equals-bg-dark);
+  --btn-equals-text: var(--btn-equals-text-dark);
+}
+
+body {
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.app {
+  width: 100%;
+  max-width: 320px;
+  position: relative;
+}
+
+.calculator-wrapper {
+  perspective: 1000px;
+}
+
+.calculator {
+  background: var(--calculator-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.display {
+  margin-bottom: 20px;
+  text-align: right;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.expression {
+  color: var(--display-text);
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+.result {
+  color: var(--result-text);
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  background: var(--btn-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--btn-text);
+  font-size: 18px;
+  font-weight: 500;
+  height: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-function {
+  background: var(--btn-function-bg);
+  color: var(--btn-function-text);
+  font-size: 16px;
+}
+
+.btn-operator {
+  background: var(--btn-operator-bg);
+  color: var(--btn-operator-text);
+}
+
+.btn-equals {
+  background: var(--btn-equals-bg);
+  color: var(--btn-equals-text);
+  grid-row: span 2;
+  height: 110px;
+}
+
+.btn-zero {
+  grid-column: span 2;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.theme-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 360px) {
+  .calculator {
+    padding: 15px;
+  }
+
+  .btn {
+    height: 45px;
+    font-size: 16px;
+  }
+
+  .btn-equals {
+    height: 100px;
+  }
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
