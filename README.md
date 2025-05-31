@@ -69,7 +69,7 @@ sin(90) = 1
 1. **Baixe os arquivos**:
    \`\`\`bash
    # Baixe o ZIP do projeto ou clone o repositório
-   wget https://github.com/seu-usuario/calculadora-pwa/archive/main.zip
+   wget https://github.com/unicondo/calculadora-pwa/archive/main.zip
    unzip main.zip
    \`\`\`
 
@@ -83,7 +83,7 @@ sin(90) = 1
 
 1. **Clone o repositório**:
    \`\`\`bash
-   git clone https://github.com/seu-usuario/calculadora-pwa.git
+   git clone https://github.com/unicondo/calculadora-pwa.git
    cd calculadora-pwa
    \`\`\`
 
@@ -317,8 +317,8 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 Para suporte técnico ou dúvidas:
 
 - 📱 **WhatsApp**: [+55 (11) 98793-5241](https://wa.me/5511987935241)
-- 📧 **Email**: bruno@unicondo.com.br
-- 🌐 **Website**: [www.unicondo.com.br](https://www.unicondo.com.br)
+- 📧 **Email**: contato@unicondo.app
+- 🌐 **Website**: [www.unicondo.com.br](https://www.unicondo.app)
 
 ## 🎯 Roadmap
 
